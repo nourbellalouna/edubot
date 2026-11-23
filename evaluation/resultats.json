@@ -1,0 +1,186 @@
+[
+    {
+        "question": "Quels documents faut-il fournir pour une inscription ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 2.12
+    },
+    {
+        "question": "Quelle moyenne faut-il obtenir pour valider le semestre ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.43
+    },
+    {
+        "question": "Quels documents sont nécessaires pour une demande de stage ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.64
+    },
+    {
+        "question": "Comment justifier une absence ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.43
+    },
+    {
+        "question": "Quels documents faut-il pour s'inscrire ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.54
+    },
+    {
+        "question": "Est-ce que 9 sur 20 permet de valider le semestre ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.64
+    },
+    {
+        "question": "Est-ce que 12 sur 20 permet de valider le semestre ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.64
+    },
+    {
+        "question": "Quels sont les éléments nécessaires pour faire un stage ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.74
+    },
+    {
+        "question": "Où dois-je justifier mon absence ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.54
+    },
+    {
+        "question": "Quelle est la moyenne minimale du semestre ?",
+        "categorie": "document",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.43
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 14 et 16 et les coefficients 2 et 3.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.23
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 10 et 12 et les coefficients 1 et 1.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.13
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 8 et 14 et les coefficients 2 et 2.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.64
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 15 et 17 et les coefficients 1 et 3.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.33
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 9 et 13 et les coefficients 2 et 3.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 1.33
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 12 et 18 et les coefficients 1 et 2.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 5.63
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 10 et 15 et les coefficients 3 et 2.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 5.73
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 7 et 11 et les coefficients 1 et 3.",
+        "categorie": "calcul",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 5.74
+    },
+    {
+        "question": "Je souhaite obtenir une attestation de scolarité.",
+        "categorie": "demande",
+        "statut_attendu": null,
+        "statut_obtenu": "repondu",
+        "reussi": true,
+        "temps": 0.0
+    },
+    {
+        "question": "Quel est le prix du restaurant universitaire ?",
+        "categorie": "document",
+        "statut_attendu": "verification_humaine",
+        "statut_obtenu": "verification_humaine",
+        "reussi": true,
+        "temps": 3.38
+    },
+    {
+        "question": "Calcule ma moyenne avec la note 25 et le coefficient 1.",
+        "categorie": "calcul",
+        "statut_attendu": "refus",
+        "statut_obtenu": "refus",
+        "reussi": true,
+        "temps": 0.0
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 12 et 15 et les coefficients 0 et 2.",
+        "categorie": "calcul",
+        "statut_attendu": "refus",
+        "statut_obtenu": "refus",
+        "reussi": true,
+        "temps": 0.0
+    },
+    {
+        "question": "Calcule ma moyenne avec les notes 12 et 15 et le coefficient 2.",
+        "categorie": "calcul",
+        "statut_attendu": "refus",
+        "statut_obtenu": "refus",
+        "reussi": true,
+        "temps": 0.0
+    }
+]
