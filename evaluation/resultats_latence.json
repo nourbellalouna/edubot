@@ -1,0 +1,12 @@
+{
+    "date": "2026-11-24T03:30:05.187080",
+    "mode": "real",
+    "modele": "openai/gpt-oss-20b",
+    "nombre_appels": 20,
+    "appels_reussis": 20,
+    "appels_en_erreur": 0,
+    "latence_minimale_secondes": 0.921,
+    "latence_mediane_secondes": 1.697,
+    "latence_maximale_secondes": 6.944,
+    "latence_moyenne_secondes": 2.672
+}
