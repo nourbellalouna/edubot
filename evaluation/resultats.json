@@ -5,7 +5,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 2.12
+        "temps": 1.09
     },
     {
         "question": "Quelle moyenne faut-il obtenir pour valider le semestre ?",
@@ -13,7 +13,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.43
+        "temps": 0.9
     },
     {
         "question": "Quels documents sont nécessaires pour une demande de stage ?",
@@ -21,7 +21,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.64
+        "temps": 1.1
     },
     {
         "question": "Comment justifier une absence ?",
@@ -29,7 +29,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.43
+        "temps": 1.08
     },
     {
         "question": "Quels documents faut-il pour s'inscrire ?",
@@ -37,7 +37,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.54
+        "temps": 0.95
     },
     {
         "question": "Est-ce que 9 sur 20 permet de valider le semestre ?",
@@ -45,7 +45,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.64
+        "temps": 0.97
     },
     {
         "question": "Est-ce que 12 sur 20 permet de valider le semestre ?",
@@ -53,7 +53,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.64
+        "temps": 0.91
     },
     {
         "question": "Quels sont les éléments nécessaires pour faire un stage ?",
@@ -61,7 +61,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.74
+        "temps": 0.92
     },
     {
         "question": "Où dois-je justifier mon absence ?",
@@ -69,7 +69,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.54
+        "temps": 1.15
     },
     {
         "question": "Quelle est la moyenne minimale du semestre ?",
@@ -77,7 +77,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.43
+        "temps": 1.07
     },
     {
         "question": "Calcule ma moyenne avec les notes 14 et 16 et les coefficients 2 et 3.",
@@ -85,7 +85,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.23
+        "temps": 0.59
     },
     {
         "question": "Calcule ma moyenne avec les notes 10 et 12 et les coefficients 1 et 1.",
@@ -93,7 +93,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.13
+        "temps": 1.65
     },
     {
         "question": "Calcule ma moyenne avec les notes 8 et 14 et les coefficients 2 et 2.",
@@ -101,7 +101,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.64
+        "temps": 2.53
     },
     {
         "question": "Calcule ma moyenne avec les notes 15 et 17 et les coefficients 1 et 3.",
@@ -109,7 +109,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.33
+        "temps": 0.49
     },
     {
         "question": "Calcule ma moyenne avec les notes 9 et 13 et les coefficients 2 et 3.",
@@ -117,7 +117,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 1.33
+        "temps": 1.55
     },
     {
         "question": "Calcule ma moyenne avec les notes 12 et 18 et les coefficients 1 et 2.",
@@ -125,7 +125,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 5.63
+        "temps": 0.64
     },
     {
         "question": "Calcule ma moyenne avec les notes 10 et 15 et les coefficients 3 et 2.",
@@ -133,7 +133,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 5.73
+        "temps": 0.7
     },
     {
         "question": "Calcule ma moyenne avec les notes 7 et 11 et les coefficients 1 et 3.",
@@ -141,7 +141,7 @@
         "statut_attendu": null,
         "statut_obtenu": "repondu",
         "reussi": true,
-        "temps": 5.74
+        "temps": 3.57
     },
     {
         "question": "Je souhaite obtenir une attestation de scolarité.",
@@ -157,7 +157,7 @@
         "statut_attendu": "verification_humaine",
         "statut_obtenu": "verification_humaine",
         "reussi": true,
-        "temps": 3.38
+        "temps": 1.13
     },
     {
         "question": "Calcule ma moyenne avec la note 25 et le coefficient 1.",
@@ -182,5 +182,37 @@
         "statut_obtenu": "refus",
         "reussi": true,
         "temps": 0.0
+    },
+    {
+        "question": "Quels documents faut-il fournir pour une bourse ?",
+        "categorie": "document",
+        "statut_attendu": "verification_humaine",
+        "statut_obtenu": "verification_humaine",
+        "reussi": true,
+        "temps": 0.59
+    },
+    {
+        "question": "Quel est le montant des frais d'inscription ?",
+        "categorie": "document",
+        "statut_attendu": "verification_humaine",
+        "statut_obtenu": "verification_humaine",
+        "reussi": true,
+        "temps": 1.8
+    },
+    {
+        "question": "Quand commence le semestre universitaire ?",
+        "categorie": "document",
+        "statut_attendu": "verification_humaine",
+        "statut_obtenu": "verification_humaine",
+        "reussi": true,
+        "temps": 1.28
+    },
+    {
+        "question": "Quels documents faut-il fournir pour une demande de logement ?",
+        "categorie": "document",
+        "statut_attendu": "verification_humaine",
+        "statut_obtenu": "verification_humaine",
+        "reussi": true,
+        "temps": 2.8
     }
 ]

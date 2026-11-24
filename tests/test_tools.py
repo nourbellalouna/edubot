@@ -1,7 +1,7 @@
 
 import pytest
 
-from app.tools.calcul import calculer_moyenne
+from app.tools.calcul import calculer_moyenne, verifier_validation_semestre
 from app.tools.demande import creer_demande
 from app.tools.recherche import rechercher_information
 from app.agent import generate_answer
@@ -20,6 +20,16 @@ def test_calculer_moyenne_notes_invalides():
 def test_calculer_moyenne_coefficients_invalides():
     with pytest.raises(ValueError):
         calculer_moyenne([12, 15], [1, 0])
+
+
+def test_verifier_validation_semestre():
+    assert verifier_validation_semestre(12) == "semestre valide"
+    assert verifier_validation_semestre(8.2) == "semestre non valide"
+
+
+def test_verifier_validation_semestre_moyenne_invalide():
+    with pytest.raises(ValueError):
+        verifier_validation_semestre(25)
 
 
 def test_creer_demande(tmp_path, monkeypatch):
@@ -81,8 +91,8 @@ def test_agent_recherche_inscription(monkeypatch):
     )
 
     assert resultat["status"] == "repondu"
-    assert "INSCRIPTION" in resultat["answer"]
-    assert "DEMANDE DE STAGE" not in resultat["answer"]
+    assert "inscription" in resultat["answer"].lower()
+    assert "demande de stage" not in resultat["answer"].lower()
     assert resultat["sources"] == ["reglement.txt"]
 
 

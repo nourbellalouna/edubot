@@ -7,7 +7,7 @@ import unicodedata
 from dotenv import load_dotenv
 from groq import Groq
 
-from app.tools.calcul import calculer_moyenne
+from app.tools.calcul import calculer_moyenne, verifier_validation_semestre
 from app.tools.recherche import rechercher_information
 from app.tools.demande import creer_demande
 
@@ -16,6 +16,7 @@ load_dotenv()
 
 APP_MODE = os.getenv("APP_MODE", "simulation")
 MODEL_NAME = os.getenv("MODEL_NAME", "openai/gpt-oss-20b")
+MAX_TOURS = 3
 
 demande_en_attente = None
 
@@ -51,7 +52,10 @@ outils = [
         "type": "function",
         "function": {
             "name": "calculer_moyenne",
-            "description": "Calcule une moyenne pondérée.",
+            "description": (
+                "Calcule une moyenne pondérée et indique si le semestre "
+                "est validé selon le seuil de 10 sur 20."
+            ),
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -104,11 +108,16 @@ outils = [
 def executer_outil(nom_outil, arguments):
 
     if nom_outil == "calculer_moyenne":
+        moyenne = calculer_moyenne(
+            arguments["notes"],
+            arguments["coefficients"]
+        )
+
+        decision = verifier_validation_semestre(moyenne)
+
         return {
-            "moyenne": calculer_moyenne(
-                arguments["notes"],
-                arguments["coefficients"]
-            )
+            "moyenne": moyenne,
+            "decision_semestre": decision
         }
 
     if nom_outil == "rechercher_information":
@@ -124,7 +133,25 @@ def executer_outil(nom_outil, arguments):
     raise ValueError("Outil inconnu.")
 
 
+def formuler_reponse_calcul(moyenne, decision):
+
+    if decision == "semestre valide":
+        decision_formulee = "semestre validé"
+    else:
+        decision_formulee = "semestre non validé"
+
+    return {
+        "answer": (
+            f"Votre moyenne pondérée est de {moyenne}/20.\n"
+            f"Décision : {decision_formulee}."
+        ),
+        "status": "repondu",
+        "sources": []
+    }
+
+
 def normaliser_question(texte):
+
     texte = unicodedata.normalize("NFD", texte.lower())
 
     return "".join(
@@ -174,6 +201,7 @@ def est_demande_explicite(question):
         "je souhaite demander",
         "je veux demander",
         "creer une demande",
+        "creer ma demande",
         "deposer une demande",
         "faire une demande de"
     ]
@@ -181,11 +209,138 @@ def est_demande_explicite(question):
     return any(expression in texte for expression in expressions)
 
 
+def est_type_demande_non_autorise(question):
+
+    texte = normaliser_question(question)
+
+    motifs = [
+        r"\bdemande\s+de\s+([a-z]+)",
+        r"\bdemande\s+d[' ]([a-z]+)",
+        r"\bdemande\s+du\s+([a-z]+)",
+        r"\bdemande\s+des\s+([a-z]+)"
+    ]
+
+    for motif in motifs:
+        resultat = re.search(motif, texte)
+
+        if resultat:
+            return True
+
+    return False
+
+
+def extraire_informations_demande(question):
+
+    nom = None
+    description = None
+
+    nom_match = re.search(
+        r"\bnom\s*:\s*(.*?)(?=;\s*description\s*:|$)",
+        question,
+        re.IGNORECASE
+    )
+
+    description_match = re.search(
+        r"\bdescription\s*:\s*(.*)",
+        question,
+        re.IGNORECASE
+    )
+
+    if nom_match:
+        nom = nom_match.group(1).strip().strip(";")
+
+    if description_match:
+        description = description_match.group(1).strip()
+
+    if not nom:
+        nom_match = re.search(
+            r"\bje m'appelle\s+(.+?)(?=\s+et\s+|\s*,|[.;]|$)",
+            question,
+            re.IGNORECASE
+        )
+
+        if nom_match:
+            nom = nom_match.group(1).strip()
+
+    if not description and nom:
+        description_match = re.search(
+            r"\bje m'appelle\s+.+?\s+et\s+(.+)",
+            question,
+            re.IGNORECASE
+        )
+
+        if description_match:
+            description = description_match.group(1).strip().strip(" .")
+
+    return nom, description
+
+
+def reponse_creation_demande(resultat):
+
+    return {
+        "answer": (
+            "Votre demande a été créée avec succès.\n"
+            f"Numéro de demande : {resultat['id']}.\n"
+            f"Statut : {resultat['statut']}."
+        ),
+        "status": "repondu",
+        "sources": []
+    }
+
+
+def reponse_type_non_autorise():
+
+    return {
+        "answer": (
+            "Ce type de demande n'est pas autorisé. "
+            "Les demandes disponibles sont : attestation de scolarité, "
+            "demande de stage et relevé de notes."
+        ),
+        "status": "refus",
+        "sources": []
+    }
+
+
 def traiter_demande(question):
 
     global demande_en_attente
 
     type_demande = detecter_type_demande(question)
+
+    contient_nom = re.search(
+        r"\bnom\s*:",
+        question,
+        re.IGNORECASE
+    )
+
+    contient_description = re.search(
+        r"\bdescription\s*:",
+        question,
+        re.IGNORECASE
+    )
+
+    contient_identite = re.search(
+        r"\bje m'appelle\s+",
+        question,
+        re.IGNORECASE
+    )
+
+    if (
+        demande_en_attente is None
+        and est_demande_explicite(question)
+        and type_demande is None
+        and est_type_demande_non_autorise(question)
+    ):
+        return reponse_type_non_autorise()
+
+    if (
+        demande_en_attente is not None
+        and est_demande_explicite(question)
+        and type_demande is None
+        and est_type_demande_non_autorise(question)
+    ):
+        demande_en_attente = None
+        return reponse_type_non_autorise()
 
     if demande_en_attente is None:
 
@@ -196,66 +351,33 @@ def traiter_demande(question):
             "type_demande": type_demande
         }
 
-        return {
-            "answer": (
-                "Le mode simulation est activé. "
-                f"Pour créer votre demande de {type_demande}, "
-                "veuillez indiquer votre nom complet et une courte description.\n\n"
-                "Exemple : Nom : Ahmed Ben Ali ; "
-                "Description : Je souhaite obtenir ce document."
-            ),
-            "status": "repondu",
-            "sources": []
+    elif type_demande and est_demande_explicite(question):
+        demande_en_attente = {
+            "type_demande": type_demande
         }
 
-    texte = question.strip()
-
-    contient_nom = re.search(
-        r"\bnom\s*:",
-        texte,
-        re.IGNORECASE
-    )
-
-    contient_description = re.search(
-        r"\bdescription\s*:",
-        texte,
-        re.IGNORECASE
-    )
-
-    if not contient_nom and not contient_description:
-
-        if type_demande and est_demande_explicite(question):
-            demande_en_attente = None
-            return traiter_demande(question)
-
+    elif not contient_nom and not contient_description and not contient_identite:
         return None
 
-    nom_match = re.search(
-        r"nom\s*:\s*(.*?)(?=;\s*description\s*:|$)",
-        texte,
-        re.IGNORECASE
-    )
+    nom, description = extraire_informations_demande(question)
 
-    description_match = re.search(
-        r"description\s*:\s*(.*)",
-        texte,
-        re.IGNORECASE
-    )
+    if not nom or not description:
 
-    if not nom_match or not description_match:
+        message = (
+            f"Pour créer votre demande de {demande_en_attente['type_demande']}, "
+            "veuillez fournir votre nom complet et une courte description.\n"
+            "Exemple : Nom : Ahmed Ben Ali ; "
+            "Description : Je souhaite obtenir ce document."
+        )
+
+        if APP_MODE == "simulation":
+            message = "Le mode simulation est activé. " + message
+
         return {
-            "answer": (
-                "Il me manque certaines informations pour créer "
-                "votre demande. Veuillez utiliser ce format :\n"
-                "Nom : Votre nom complet ; "
-                "Description : La raison de votre demande."
-            ),
+            "answer": message,
             "status": "repondu",
             "sources": []
         }
-
-    nom = nom_match.group(1).strip().strip(";")
-    description = description_match.group(1).strip()
 
     try:
         resultat = creer_demande(
@@ -266,17 +388,11 @@ def traiter_demande(question):
 
         demande_en_attente = None
 
-        return {
-            "answer": (
-                "Votre demande a été créée avec succès.\n"
-                f"Numéro de demande : {resultat['id']}.\n"
-                f"Statut : {resultat['statut']}."
-            ),
-            "status": "repondu",
-            "sources": []
-        }
+        return reponse_creation_demande(resultat)
 
     except ValueError as erreur:
+        demande_en_attente = None
+
         return {
             "answer": str(erreur),
             "status": "refus",
@@ -391,12 +507,9 @@ def repondre_simulation(question):
 
         try:
             moyenne = calculer_moyenne(notes, coefficients)
+            decision = verifier_validation_semestre(moyenne)
 
-            return {
-                "answer": f"Votre moyenne pondérée est de {moyenne}/20.",
-                "status": "repondu",
-                "sources": []
-            }
+            return formuler_reponse_calcul(moyenne, decision)
 
         except ValueError as erreur:
             return {
@@ -464,7 +577,7 @@ def generate_answer(question: str, version_prompt="A"):
 
     sources = []
 
-    for tour in range(3):
+    for tour in range(MAX_TOURS):
 
         response = client.chat.completions.create(
             model=MODEL_NAME,
@@ -514,19 +627,36 @@ def generate_answer(question: str, version_prompt="A"):
             nom_outil = tool_call.function.name
             arguments = json.loads(tool_call.function.arguments)
 
+            if nom_outil == "creer_demande" and not est_demande_explicite(question):
+                contenu_resultat = json.dumps(
+                    {
+                        "erreur": (
+                            "La création d'une demande n'est autorisée "
+                            "que si l'étudiant la demande explicitement."
+                        )
+                    },
+                    ensure_ascii=False
+                )
+
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "content": contenu_resultat
+                })
+
+                continue
+
             try:
                 resultat = executer_outil(nom_outil, arguments)
 
+                if nom_outil == "calculer_moyenne":
+                    return formuler_reponse_calcul(
+                        resultat["moyenne"],
+                        resultat["decision_semestre"]
+                    )
+
                 if nom_outil == "creer_demande":
-                    return {
-                        "answer": (
-                            f"Votre demande a été créée avec succès. "
-                            f"Numéro de demande : {resultat['id']}. "
-                            f"Statut : {resultat['statut']}."
-                        ),
-                        "status": "repondu",
-                        "sources": []
-                    }
+                    return reponse_creation_demande(resultat)
 
                 if nom_outil == "rechercher_information":
 

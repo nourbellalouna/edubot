@@ -25,10 +25,21 @@ def normaliser(texte):
 
 def verifier_reponse(exemple, resultat):
     categorie = exemple["categorie"]
-    reponse = normaliser(resultat["answer"])
+    statut_attendu = exemple.get("statut_attendu")
+    statut_obtenu = resultat.get("status")
+
+    if statut_attendu == "refus":
+        return statut_obtenu == "refus"
+
+    if statut_attendu == "verification_humaine":
+        return statut_obtenu == "verification_humaine"
+
+    if statut_attendu == "repondu" and statut_obtenu != "repondu":
+        return False
+
+    reponse = normaliser(resultat.get("answer", ""))
 
     if categorie == "document":
-
         attendu = normaliser(exemple["reponse_attendue"])
 
         mots_importants = re.findall(r"\w+", attendu)
@@ -50,7 +61,6 @@ def verifier_reponse(exemple, resultat):
         return presents / len(mots_importants) >= 0.6
 
     if categorie == "calcul":
-
         attendus = re.findall(
             r"\d+(?:[.,]\d+)?",
             exemple["reponse_attendue"]
@@ -81,7 +91,6 @@ with open(FICHIER_DATASET, "r", encoding="utf-8") as fichier:
 resultats_comparaison = {}
 
 for version in ["A", "B"]:
-
     reussites = 0
     total = 0
     temps_total = 0
@@ -90,7 +99,6 @@ for version in ["A", "B"]:
     print(f"\nEvaluation du prompt {version}")
 
     for exemple in dataset:
-
         if exemple["categorie"] == "demande":
             print("IGNORE | demande | Création réelle non testée")
             continue
@@ -112,6 +120,8 @@ for version in ["A", "B"]:
             details.append({
                 "question": exemple["question"],
                 "categorie": exemple["categorie"],
+                "statut_attendu": exemple.get("statut_attendu"),
+                "statut_obtenu": resultat.get("status"),
                 "correct": correct,
                 "temps": round(duree, 2)
             })
@@ -120,12 +130,12 @@ for version in ["A", "B"]:
             print(f"{statut} | {exemple['categorie']} | {duree:.2f}s")
 
         except Exception as erreur:
-
             total += 1
 
             details.append({
                 "question": exemple["question"],
                 "categorie": exemple["categorie"],
+                "statut_attendu": exemple.get("statut_attendu"),
                 "correct": False,
                 "erreur": str(erreur)
             })

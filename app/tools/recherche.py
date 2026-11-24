@@ -11,14 +11,34 @@ MOTS_INUTILES = {
     "un", "de", "du", "dans", "pour", "avec", "sur",
     "je", "dois", "mon", "ma", "mes", "me", "faire",
     "faut", "il", "elle", "et", "ou", "a", "au",
-    "aux", "qui", "que", "quoi", "ou", "inscrire"
+    "aux", "qui", "que", "quoi", "inscrire",
+    "obtenir", "necessaires", "necessaire",
+    "elements", "permet", "estce", "doit",
+    "effectuer", "aupres", "universitaire"
 }
 
 SYNONYMES = {
     "inscrire": "inscription",
     "inscriptions": "inscription",
     "documents": "fournir",
-    "document": "fournir"
+    "document": "fournir",
+    "justifier": "justifiee",
+    "justification": "justifiee",
+    "valider": "validation",
+    "valide": "validation",
+    "minimale": "moyenne"
+}
+
+SUJETS_SPECIFIQUES = {
+    "bourse": {"bourse"},
+    "logement": {"logement"},
+    "frais": {"frais", "prix", "cout", "montant", "tarif"},
+    "prix": {"frais", "prix", "cout", "montant", "tarif"},
+    "montant": {"frais", "prix", "cout", "montant", "tarif"},
+    "cout": {"frais", "prix", "cout", "montant", "tarif"},
+    "commence": {"date", "debut", "commence", "calendrier"},
+    "debut": {"date", "debut", "commence", "calendrier"},
+    "date": {"date", "debut", "commence", "calendrier"}
 }
 
 
@@ -26,13 +46,11 @@ def normaliser_texte(texte):
     texte = texte.lower()
     texte = unicodedata.normalize("NFD", texte)
 
-    texte = "".join(
+    return "".join(
         caractere
         for caractere in texte
         if unicodedata.category(caractere) != "Mn"
     )
-
-    return texte
 
 
 def extraire_mots(texte):
@@ -50,43 +68,65 @@ def extraire_mots(texte):
     return resultat
 
 
+def sujet_non_couvert(mots_question, mots_paragraphe):
+
+    for mot in mots_question:
+        if mot in SUJETS_SPECIFIQUES:
+            mots_attendus = SUJETS_SPECIFIQUES[mot]
+
+            if not mots_attendus.intersection(mots_paragraphe):
+                return True
+
+    return False
+
+
 def rechercher_information(question: str):
     resultats = []
 
     mots_question = extraire_mots(question)
 
+    if not mots_question:
+        return []
+
+    if not os.path.isdir(DOSSIER_DOCUMENTS):
+        return []
+
     for fichier in os.listdir(DOSSIER_DOCUMENTS):
 
-        if fichier.endswith(".txt"):
+        if not fichier.endswith(".txt"):
+            continue
 
-            chemin = os.path.join(DOSSIER_DOCUMENTS, fichier)
+        chemin = os.path.join(DOSSIER_DOCUMENTS, fichier)
 
-            with open(chemin, "r", encoding="utf-8") as f:
-                contenu = f.read()
+        with open(chemin, "r", encoding="utf-8") as f:
+            contenu = f.read()
 
-            paragraphes = contenu.split("\n\n")
+        paragraphes = contenu.split("\n\n")
 
-            i = 0
+        for paragraphe in paragraphes:
 
-            while i < len(paragraphes):
+            paragraphe = paragraphe.strip()
 
-                paragraphe = paragraphes[i].strip()
+            if not paragraphe:
+                continue
 
-                if re.match(r"^\d+\.", paragraphe) and i + 1 < len(paragraphes):
-                    paragraphe += "\n" + paragraphes[i + 1].strip()
-                    i += 1
+            mots_paragraphe = extraire_mots(paragraphe)
 
-                mots_paragraphe = extraire_mots(paragraphe)
-                score = len(mots_question & mots_paragraphe)
+            if sujet_non_couvert(mots_question, mots_paragraphe):
+                continue
 
-                if score > 0:
-                    resultats.append({
-                        "texte": paragraphe,
-                        "source": fichier,
-                        "score": score
-                    })
+            correspondances = mots_question.intersection(
+                mots_paragraphe
+            )
 
-                i += 1
+            score = len(correspondances)
+
+            if score > 0:
+                resultats.append({
+                    "texte": paragraphe,
+                    "source": fichier,
+                    "score": score
+                })
 
     resultats.sort(
         key=lambda resultat: resultat["score"],

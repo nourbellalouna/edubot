@@ -126,5 +126,30 @@
     "reponse_attendue": "Les notes et les coefficients sont obligatoires.",
     "statut_attendu": "refus"
 }
+,
+{
+    "question": "Quels documents faut-il fournir pour une bourse ?",
+    "categorie": "document",
+    "reponse_attendue": "L'information est introuvable dans les documents disponibles.",
+    "statut_attendu": "verification_humaine"
+},
+{
+    "question": "Quel est le montant des frais d'inscription ?",
+    "categorie": "document",
+    "reponse_attendue": "L'information est introuvable dans les documents disponibles.",
+    "statut_attendu": "verification_humaine"
+},
+{
+    "question": "Quand commence le semestre universitaire ?",
+    "categorie": "document",
+    "reponse_attendue": "L'information est introuvable dans les documents disponibles.",
+    "statut_attendu": "verification_humaine"
+},
+{
+    "question": "Quels documents faut-il fournir pour une demande de logement ?",
+    "categorie": "document",
+    "reponse_attendue": "L'information est introuvable dans les documents disponibles.",
+    "statut_attendu": "verification_humaine"
+}
 
 ]

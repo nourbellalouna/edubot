@@ -18,3 +18,14 @@ def calculer_moyenne(notes: list[float], coefficients: list[float]):
     ) / somme_coefficients
 
     return round(moyenne, 2)
+
+
+def verifier_validation_semestre(moyenne: float):
+
+    if moyenne < 0 or moyenne > 20:
+        raise ValueError("La moyenne doit être comprise entre 0 et 20.")
+
+    if moyenne >= 10:
+        return "semestre valide"
+
+    return "semestre non valide"
